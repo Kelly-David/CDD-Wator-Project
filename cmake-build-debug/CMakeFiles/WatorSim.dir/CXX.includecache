@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/david/CLionProjects/WatorSim/animal.cpp
+animal.h
+/Users/david/CLionProjects/WatorSim/animal.h
+
+/Users/david/CLionProjects/WatorSim/animal.h
+
+/Users/david/CLionProjects/WatorSim/main.cpp
+iostream
+-
+random
+-
+unistd.h
+-
+vector
+-
+stdlib.h
+-
+time.h
+-
+

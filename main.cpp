@@ -93,7 +93,7 @@ void create() {
 }
 
 /**
- * \brief Copy updated values
+ * \brief Copy updated values to main arrays
  */
 void copyOcean(char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
                int toBreed[LIMIT][LIMIT], int fromBreed[LIMIT][LIMIT],

@@ -129,6 +129,22 @@ void updateAnimals() {
 }
 
 /**
+ * \brief Delete Fish
+ */
+void deleteFish(int xpos, int ypos) {
+    ocean[xpos][ypos] = SHARK;
+    starve[xpos][ypos] = 0;
+    breed[xpos][ypos] = 0;
+}
+
+/**
+ * \brief Delete Fish
+ */
+void deleteShark( int xpos, int ypos) {
+
+}
+
+/**
  * \brief int randomGen(long int limit)::returns a random integer between 1 and limit
  */
 int randomGen(long int range) {

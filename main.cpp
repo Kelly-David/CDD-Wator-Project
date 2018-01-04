@@ -12,14 +12,18 @@
 #include <stdlib.h>
 #include <time.h>
 
-int const _X = 20;
-int const _Y= 20;
-int const LIMIT = 20; // Must match array bounds
-char const WATER = ' ';
-char const FISH = 'o';
-char const SHARK = '$';
+int const _X = 20;      // Ocean width
+int const _Y= 20;       // Ocean height
+int const LIMIT = 20;   // Must match array bounds, expects ocean to be square
+char const WATER = ' '; // Water is blank space
+char const FISH = 'o';  // Fish are o
+char const SHARK = '$'; // Sharks are $
 
-// Create 2d array representing ocean; breeding time; starving time
+/**
+ * Create 2d arrays representing ocean; breeding time; starving time
+ * ocean, breed, starve are for display
+ * ...next arrays are for updating animal position and state
+ */
 char ocean[_X][_Y];
 char oceanNext[_X][_Y];
 int breed[_X][_Y];
@@ -30,56 +34,65 @@ int starveNext[_X][_Y];
 std::vector<int> neighbours;
 
 int totalFish = 10;
-int allFish = totalFish;
+int allFish = totalFish;    // Running count of fish
 int totalSharks = 10;
-int allSharks = totalSharks;
+int allSharks = totalSharks;// Running count of sharks
 
-int fishBreedTime = 5;
-int sharkBreedTime = 5;
-int sharkStarveTime = 5;
+int fishBreedTime = 5;      // Iteration count until fish breed
+int sharkBreedTime = 5;     // Iteration count until sharks breed
+int sharkStarveTime = 5;    // Iteration count until shark dies
+
+int breedLife = 5;
+int starveLife = 5;
 
 int randomXPos, randomYPos = 0;
 
-long int microseconds = 1000000;
+long int microseconds = 1000000; // Timer variable
 
 /**
- * \brief void makeOcean() :: Fills each element of the ocean array with char: underscore
+ * \brief void populateAllArrays()() :: Initialises 6 arrays:
+ * ocean arrays with WATER character
+ * breed arrays with 0
+ * starve arrays with 0
  */
-void makeOcean() {
+void populateAllArrays() {
     for (int i = 0; i < _X; ++i) {
         for (int k = 0; k < _Y; ++k) {
             ocean[i][k] = WATER;
             oceanNext[i][k] = WATER;
             breed[i][k] = 0;
             breedNext[i][k] = 0;
-            starve[i][k] = 5;
-            starveNext[i][k] = 5;
+            starve[i][k] = 0;
+            starveNext[i][k] = 0;
         }
     }
 }
 
 /**
- * \brief void makeFish() :: Fills each element of the ocean array with char: lowercase
+ * \brief void populateWithFish() :: Randomly places Fish in the ocean array
+ * Sets corresponding breed/starve arrays
  */
-void makeFish() {
+void populateWithFish() {
     for (int i = 0; i < totalFish; ++i) {
         randomXPos = (int) random() % LIMIT;
         randomYPos = (int) random() % LIMIT;
         ocean[randomXPos][randomYPos] = FISH;
-        breed[randomXPos][randomYPos] = fishBreedTime;
+        breed[randomXPos][randomYPos] = breedLife;
+        starve[randomXPos][randomXPos] = starveLife;
     }
 }
 
 /**
- * \brief void makeSharks() :: Fills each element of the ocean array with char: dollar
+ * \brief void populateWithSharkss() :: Randomly places Sharks in the ocean array
+ * Sets corresponding breed/starve arrays
  */
-void makeShark() {
+void populateWithSharks() {
     for (int i = 0; i < totalSharks; ++i) {
         randomXPos = (int) random() % LIMIT;
         randomYPos = (int) random() % LIMIT;
         ocean[randomXPos][randomYPos] = SHARK;
-        breed[randomXPos][randomYPos] = sharkBreedTime;
-        starve[randomXPos][randomYPos] = sharkStarveTime;
+        breed[randomXPos][randomYPos] = breedLife;
+        starve[randomXPos][randomYPos] = starveLife;
     }
 }
 
@@ -87,22 +100,24 @@ void makeShark() {
  * \brief void create() :: Populates the ocean array with respective characters
  */
 void create() {
-    makeOcean();
-    makeFish();
-    makeShark();
+    populateAllArrays();
+    populateWithFish();
+    populateWithSharks();
 }
 
 /**
- * \brief Copy updated values to main arrays
+ * \brief Copies the contents of ...next arrays to display arrays
  */
-void copyOcean(char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
-               int toBreed[LIMIT][LIMIT], int fromBreed[LIMIT][LIMIT],
-               int toStarve[LIMIT][LIMIT], int fromStarve[LIMIT][LIMIT]) {
+void updateOceanContents(
+        char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
+        int toBreed[LIMIT][LIMIT], int fromBreed[LIMIT][LIMIT],
+        int toStarve[LIMIT][LIMIT], int fromStarve[LIMIT][LIMIT]) {
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             toOcean[i][k] = fromOcean[i][k];
             toBreed[i][k] = fromBreed[i][k];
             toStarve[i][k] = fromStarve[i][k];
+            // Reset ...next arrays
             fromOcean[i][k] = WATER;
             fromBreed[i][k] = 0;
             fromStarve[i][k] = 0;
@@ -111,13 +126,13 @@ void copyOcean(char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
 
 }
 /**
- * \brief Update totals for main loop
+ * \brief Update totals for display
  */
-void updateAnimals() {
+void updateTotals() {
     allSharks = 0;
     allFish = 0;
-    for (int i = 0; i < _X; ++i) {
-        for (int k = 0; k < _Y; ++k) {
+    for (int i = 0; i < LIMIT; ++i) {
+        for (int k = 0; k < LIMIT; ++k) {
             if (ocean[i][k] == FISH) {
                 ++allFish;
             }
@@ -208,7 +223,7 @@ int getMoveDirection(char type, int xpos, int ypos) {
 /**
  * \brief Prints the ocean array to screen
  */
-void move() {
+void simulate() {
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             if ((ocean[i][k] == FISH) || (ocean[i][k] == SHARK)) {
@@ -271,12 +286,13 @@ void move() {
  * \brief Prints the ocean array to screen
  */
 void print() {
-    for (int i = 0; i < _X; ++i) {
-        for (int k = 0; k < _Y; ++k) {
+    for (int i = 0; i < LIMIT; ++i) {
+        for (int k = 0; k < LIMIT; ++k) {
             std::cout << ocean[i][k];
         }
         std::cout << std::endl;
     }
+    // Display the running totals
     std::cout << "Fish[" << allFish << "] Sharks[" << allSharks << "]" << std::endl;
 }
 
@@ -284,18 +300,29 @@ void print() {
  * \brief Main
  */
 int main() {
-    /* initialize random seed: */
+
+    //Initialize random seed for random number generator
     srand (time(NULL));
-    std::cout << "Hello, World!" << std::endl;
+
+    std::cout << "Wator World Simulation" << std::endl;
+
+    // Create the Wator world
     create();
+
+    // Start main loop
     do {
+        // Prints the ocean
         print();
         std::cout << "---------------------" << std::endl;
+        // Timer
         usleep(microseconds);
-        move();
-        copyOcean(ocean, oceanNext, breed, breedNext, starve, starveNext);
-        updateAnimals();
-    } while ((allSharks > 0) && (allFish > 0));
+        // Simulate
+        simulate();
+        // Update the arrays
+        updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
+        // Update Shark and Fish totals
+        updateTotals();
+    } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
 
     return 0;
 }

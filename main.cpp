@@ -2,6 +2,16 @@
     Wator Simulation : Sharks and Fish
     Created by: David Kelly, Vaidas Suipienus
     Date: 29/11/2017
+
+
+    Description:
+    Fish:   move to a non-occupied index.
+            breed when breedLife == 0 (spawn a new fish in their place)
+    Shark:  move to nearby index occupied by a fish
+            if no fish are nearby :
+                move to a non-occupied index
+                decrement starveLife
+            die when starveLife == 0
 */
 
 /* Includes */
@@ -60,10 +70,10 @@ void populateAllArrays() {
         for (int k = 0; k < _Y; ++k) {
             ocean[i][k] = WATER;
             oceanNext[i][k] = WATER;
-            breed[i][k] = 0;
-            breedNext[i][k] = 0;
-            starve[i][k] = 0;
-            starveNext[i][k] = 0;
+            breed[i][k] = breedLife;
+            breedNext[i][k] = breedLife;
+            starve[i][k] = starveLife;
+            starveNext[i][k] = starveLife;
         }
     }
 }
@@ -97,15 +107,6 @@ void populateWithSharks() {
 }
 
 /**
- * \brief void create() :: Populates the ocean array with respective characters
- */
-void create() {
-    populateAllArrays();
-    populateWithFish();
-    populateWithSharks();
-}
-
-/**
  * \brief Copies the contents of ...next arrays to display arrays
  */
 void updateOceanContents(
@@ -117,14 +118,21 @@ void updateOceanContents(
             toOcean[i][k] = fromOcean[i][k];
             toBreed[i][k] = fromBreed[i][k];
             toStarve[i][k] = fromStarve[i][k];
-            // Reset ...next arrays
-            fromOcean[i][k] = WATER;
-            fromBreed[i][k] = 0;
-            fromStarve[i][k] = 0;
         }
     }
 
 }
+
+/**
+ * \brief void create() :: Populates the ocean array with respective characters
+ */
+void create() {
+    populateAllArrays();
+    populateWithFish();
+    populateWithSharks();
+    updateOceanContents(oceanNext, ocean, breedNext, breed, starveNext, starve);
+}
+
 /**
  * \brief Update totals for display
  */
@@ -144,19 +152,40 @@ void updateTotals() {
 }
 
 /**
- * \brief Delete Fish
+ * \brief Breed Fish
  */
-void deleteFish(int xpos, int ypos) {
-    ocean[xpos][ypos] = SHARK;
-    starve[xpos][ypos] = 0;
-    breed[xpos][ypos] = 0;
+void breedFish(int xpos, int ypos) {
+    // New fish are placed in the pre-move location of parent.
+    oceanNext[xpos][ypos] = FISH;
+    breedNext[xpos][ypos] = breedLife;
+    starveNext[xpos][ypos] = breedLife;
+    // ...then parent will move
 }
 
 /**
- * \brief Delete Fish
+ * \brief Eat Fish
+ * Removes the Fish from the oceanNext array at the corresponding position
  */
-void deleteShark( int xpos, int ypos) {
+void eatFish(int xpos, int ypos) {
+    oceanNext[xpos][ypos] = WATER;
+    breedNext[xpos][ypos] = breedLife;
+    starveNext[xpos][ypos] = starveLife;
+    ocean[xpos][ypos] = WATER;
+    breed[xpos][ypos] = breedLife;
+    starve[xpos][ypos] = starveLife;
+    // Shark will then be moved into this position - so do we need to remove the fish?
+}
 
+/**
+ * \brief Delete Shark
+ */
+void killShark( int xpos, int ypos) {
+    oceanNext[xpos][ypos] = WATER;
+    breedNext[xpos][ypos] = breedLife;
+    starveNext[xpos][ypos] = starveLife;
+    ocean[xpos][ypos] = WATER;
+    breed[xpos][ypos] = breedLife;
+    starve[xpos][ypos] = starveLife;
 }
 
 /**
@@ -174,47 +203,65 @@ int randomGen(long int range) {
  * \brief int getMoveDirection(
  */
 int getMoveDirection(char type, int xpos, int ypos) {
+
+    // Reset the neighbours vector
     neighbours.clear();
 
     if (type == SHARK) {
-        if(ocean[xpos - 1][ypos] == FISH){
+        if(oceanNext[xpos][(ypos + LIMIT - 1) % LIMIT] == FISH) {
+            // Fish is North
             neighbours.push_back(1);
-            breed[xpos][ypos]++; //found a fish increment breed time
+            // Remove the fish
+            eatFish(xpos, (ypos + LIMIT - 1) % LIMIT);
+            return 1;
         }
-        else if(ocean[xpos + 1][ypos] == FISH){
+        else if (oceanNext[xpos][(ypos + 1) % LIMIT] == FISH){
+            // Fish is South
             neighbours.push_back(2);
-            breed[xpos][ypos]++; //found a fish increment breed time
+            eatFish(xpos, (ypos + 1) % LIMIT);
+            return 2;
         }
-        else if(ocean[xpos][ypos + 1] == FISH){
+        else if (oceanNext[(xpos + 1) % LIMIT][ypos] == FISH){
+            //Fish is East
             neighbours.push_back(3);
-            breed[xpos][ypos]++; //found a fish increment breed time
+            eatFish((xpos + 1) % LIMIT, ypos);
+            return 3;
         }
-        else if(ocean[xpos][ypos -1] == FISH){
+        else if (oceanNext[(xpos + LIMIT - 1) % LIMIT][ypos] == FISH){
+            // Fish is West
             neighbours.push_back(4);
-            breed[xpos][ypos]++; //found a fish increment breed time
+            eatFish((xpos + LIMIT - 1) % LIMIT, ypos);
+            return 4;
         }
     }
-    if ((type == FISH ) || ((type == SHARK) && (neighbours.size() == 0))) {
-        if(type == SHARK) { starve[xpos][ypos]++; } // No neighbouring fish - decrement starve time.
+    // If it's a FISH or ( a SHARK and the neighbours is still empty )
+    if ((type == FISH ) || ((type == SHARK) && (neighbours.empty()))) {
+        // If it's a SHARK it hasn't found a fish so starve it...
+        if (type == SHARK) { ocean[xpos][ypos]--; }
 
-        if(ocean[xpos - 1][ypos] == WATER){
+        if (oceanNext[xpos][(ypos + LIMIT - 1) % LIMIT] == WATER){
+            // North
             neighbours.push_back(1);
         }
-        if(ocean[xpos + 1][ypos] == WATER){
+        if (oceanNext[xpos][(ypos + 1) % LIMIT] == WATER){
+            // South
             neighbours.push_back(2);
         }
-        if(ocean[xpos][ypos + 1] == WATER){
+        if (oceanNext[(xpos + 1) % LIMIT][xpos] == WATER){
+            // East
             neighbours.push_back(3);
         }
-        if(ocean[xpos][ypos -1] == WATER){
+        if (oceanNext[(xpos + LIMIT - 1) % LIMIT][ypos] == WATER){
+            //West
             neighbours.push_back(4);
         }
     }
-    if(neighbours.size() == 0) {
+    if (neighbours.empty()) {
+        // Animal cannot move
         return 0;
     }
     else {
-        if(type == FISH) { breed[xpos][ypos]++; } //Fish can move increment breed time
+        // Select a random direction
         int direction = randomGen(neighbours.size());
         return neighbours[direction];
     }
@@ -224,64 +271,131 @@ int getMoveDirection(char type, int xpos, int ypos) {
  * \brief Prints the ocean array to screen
  */
 void simulate() {
+    int moveDirection = 0;
+    bool canBreed = false;
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
-            if ((ocean[i][k] == FISH) || (ocean[i][k] == SHARK)) {
-                int direction = getMoveDirection(ocean[i][k], i, k);
-                if (direction == 1) { // North
-                    if (ocean[i][k] == FISH) {
-                        oceanNext[(i + LIMIT -1) % LIMIT][k] = FISH;
-                    }
-                    if (ocean[i][k] == SHARK) {
-                        oceanNext[(i + LIMIT -1) % LIMIT][k] = SHARK;
-                    }
-                    starveNext[(i + LIMIT -1) % LIMIT][k] = starve[i][k];
-                    breedNext[(i + LIMIT -1) % LIMIT][k] = breed[i][k];
+            // If it's a FISH...
+            if ((ocean[i][k] == FISH)) {
+                // Find the move direction. Will be 0-4
+                moveDirection = getMoveDirection(FISH, i, k);
 
-                } else if (direction == 2) { // South
-                    if (ocean[i][k] == FISH) {
-                        oceanNext[(i + 1) % LIMIT][k] = FISH;
+                if (moveDirection != 0) {
+                    //Fish can move - decrement breed time
+                    breed[i][k]--;
+                    if (breed[i][k] == 0) {
+                        // Fish can breed...
+                        // Make a new fish in the current fish location in both ocean arrays
+                        canBreed = true;
                     }
-                    if (ocean[i][k] == SHARK) {
-                        oceanNext[(i + 1) % LIMIT][k] = SHARK;
-                    }
-                    starveNext[(i + 1) % LIMIT][k] = starve[i][k];
-                    breedNext[(i + 1) % LIMIT][k] = breed[i][k];
+                }
+                if (moveDirection == 1) { // North: decrease Y
 
-                } else if (direction == 3) { // East
-                    if (ocean[i][k] == FISH) {
-                        oceanNext[i][(k + 1) % LIMIT] = FISH;
-                    }
-                    if (ocean[i][k] == SHARK) {
-                        oceanNext[i][(k + 1) % LIMIT] = SHARK;
-                    }
+                    oceanNext[i][(k + LIMIT - 1) % LIMIT] = FISH;
+                    starveNext[i][(k + LIMIT - 1) % LIMIT] = starve[i][k];
+                    breedNext[i][(k + LIMIT - 1) % LIMIT] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
+
+                } else if (moveDirection == 2) { // South: Increase Y
+
+                    oceanNext[i][(k + 1) % LIMIT] = FISH;
                     starveNext[i][(k + 1) % LIMIT] = starve[i][k];
                     breedNext[i][(k + 1) % LIMIT] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
 
-                } else if (direction == 4) { // West
-                    if (ocean[i][k] == FISH) {
-                        oceanNext[i][(k + LIMIT -1) % LIMIT] = FISH;
-                    }
-                    if (ocean[i][k] == SHARK) {
-                        oceanNext[i][(k + LIMIT -1) % LIMIT] = SHARK;
-                    }
-                    starveNext[i][(k + LIMIT -1) % LIMIT] = starve[i][k];
-                    breedNext[i][(k + LIMIT -1) % LIMIT] = breed[i][k];
+                } else if (moveDirection == 3) { // East: Increase X
 
-                } else if (direction == 0) { // Can't move
-                    if (ocean[i][k] == FISH) {
-                        oceanNext[i][k] = FISH;
-                    }
-                    if (ocean[i][k] == SHARK) {
-                        oceanNext[i][k] = SHARK;
-                    }
-                    breedNext[i][k] = breed[i][k];
-                    starveNext[i][k] = starve[i][k];
+                    oceanNext[(i + 1) % LIMIT][k] = FISH;
+                    starveNext[(k + 1) % LIMIT][k] = starve[i][k];
+                    breedNext[(k + 1) % LIMIT][k] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
+
+                } else if (moveDirection == 4) { // West: Decrease X
+
+                    oceanNext[(i + LIMIT - 1) % LIMIT][k] = FISH;
+                    starveNext[(i + LIMIT - 1) % LIMIT][k] = starve[i][k];
+                    breedNext[(i + LIMIT - 1) % LIMIT][k] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
                 }
+                if (canBreed) { breedFish(i,k); }
             }
+            // If its a SHARK...
+            else if ((ocean[i][k] == SHARK)) {
+                moveDirection = getMoveDirection(SHARK, i, k);
+
+                if (moveDirection != 0) {
+                    // Shark can move - decrement breed time
+                    breed[i][k]--;
+                    if (breed[i][k] == 0) {
+                        // Shark can breed - are sharks allowed to breed?
+                    }
+                }
+
+                if (starve[i][k] == 0) {
+                    killShark(i, k);
+                }
+                if (moveDirection == 1) { // North: decrease Y
+
+                    oceanNext[i][(k + LIMIT - 1) % LIMIT] = SHARK;
+                    starveNext[i][(k + LIMIT - 1) % LIMIT] = starve[i][k];
+                    breedNext[i][(k + LIMIT - 1) % LIMIT] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
+
+                } else if (moveDirection == 2) { // South: Increase Y
+
+                    oceanNext[i][(k + 1) % LIMIT] = SHARK;
+                    starveNext[i][(k + 1) % LIMIT] = starve[i][k];
+                    breedNext[i][(k + 1) % LIMIT] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
+
+                } else if (moveDirection == 3) { // East: Increase X
+
+                    oceanNext[(i + 1) % LIMIT][k] = SHARK;
+                    starveNext[(k + 1) % LIMIT][k] = starve[i][k];
+                    breedNext[(k + 1) % LIMIT][k] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
+
+                } else if (moveDirection == 4) { // West: Decrease X
+
+                    oceanNext[(i + LIMIT - 1) % LIMIT][k] = SHARK;
+                    starveNext[(i + LIMIT - 1) % LIMIT][k] = starve[i][k];
+                    breedNext[(i + LIMIT - 1) % LIMIT][k] = breed[i][k];
+                    // Clear the current position and associated breed & starve times
+                    oceanNext[i][k] = WATER;
+                    breedNext[i][k] = breedLife;
+                    starveNext[i][k] = starveLife;
+                }
+
+            }
+            ocean[i][k] = WATER;
+            breed[i][k] = breedLife;
+            starve[i][k] = starveLife;
         }
     }
+    updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
 }
+
 /**
  * \brief Prints the ocean array to screen
  */

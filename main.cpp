@@ -22,11 +22,11 @@
 #include <stdlib.h>
 #include <time.h>
 
-int const _X = 20;      // Ocean width
-int const _Y= 20;       // Ocean height
-int const LIMIT = 20;   // Must match array bounds, expects ocean to be square
+int const _X = 30;      // Ocean width
+int const _Y= 30;       // Ocean height
+int const LIMIT = 30;   // Must match array bounds, expects ocean to be square
 char const WATER = ' '; // Water is blank space
-char const FISH = 'o';  // Fish are o
+char const FISH = '.';  // Fish are o
 char const SHARK = '$'; // Sharks are $
 
 /**
@@ -45,19 +45,15 @@ std::vector<int> neighbours;
 
 int totalFish = 10;
 int allFish = totalFish;    // Running count of fish
-int totalSharks = 10;
+int totalSharks = 50;
 int allSharks = totalSharks;// Running count of sharks
-
-int fishBreedTime = 5;      // Iteration count until fish breed
-int sharkBreedTime = 5;     // Iteration count until sharks breed
-int sharkStarveTime = 5;    // Iteration count until shark dies
 
 int breedLife = 5;
 int starveLife = 5;
 
 int randomXPos, randomYPos = 0;
 
-long int microseconds = 1000000; // Timer variable
+long int microseconds = 100000; // Timer variable
 
 /**
  * \brief void populateAllArrays()() :: Initialises 6 arrays:
@@ -177,7 +173,7 @@ void eatFish(int xpos, int ypos) {
 }
 
 /**
- * \brief Delete Shark
+ * \brief Kill Shark
  */
 void killShark( int xpos, int ypos) {
     oceanNext[xpos][ypos] = WATER;
@@ -213,25 +209,25 @@ int getMoveDirection(char type, int xpos, int ypos) {
             neighbours.push_back(1);
             // Remove the fish
             eatFish(xpos, (ypos + LIMIT - 1) % LIMIT);
-            return 1;
+            // return 1;
         }
         else if (oceanNext[xpos][(ypos + 1) % LIMIT] == FISH){
             // Fish is South
             neighbours.push_back(2);
             eatFish(xpos, (ypos + 1) % LIMIT);
-            return 2;
+            // return 2;
         }
         else if (oceanNext[(xpos + 1) % LIMIT][ypos] == FISH){
             //Fish is East
             neighbours.push_back(3);
             eatFish((xpos + 1) % LIMIT, ypos);
-            return 3;
+            // return 3;
         }
         else if (oceanNext[(xpos + LIMIT - 1) % LIMIT][ypos] == FISH){
             // Fish is West
             neighbours.push_back(4);
             eatFish((xpos + LIMIT - 1) % LIMIT, ypos);
-            return 4;
+            // return 4;
         }
     }
     // If it's a FISH or ( a SHARK and the neighbours is still empty )
@@ -268,6 +264,20 @@ int getMoveDirection(char type, int xpos, int ypos) {
 }
 
 /**
+ * \brief Moves the Fish or Sharks to their new location
+ * Moves the contents of array at xpos and ypos to the index of array ...next at xMove yMove
+ */
+void move(char animal, int xpos, int ypos, int xMove, int yMove) {
+
+    oceanNext[xMove][yMove] = animal;
+    breedNext[xMove][yMove] = breed[xpos][ypos];
+    starveNext[xMove][yMove] = starve[xpos][ypos];
+    oceanNext[xpos][ypos] = WATER;
+    breedNext[xpos][ypos] = breedLife;
+    starveNext[xpos][ypos] = starveLife;
+}
+
+/**
  * \brief Prints the ocean array to screen
  */
 void simulate() {
@@ -291,43 +301,19 @@ void simulate() {
                 }
                 if (moveDirection == 1) { // North: decrease Y
 
-                    oceanNext[i][(k + LIMIT - 1) % LIMIT] = FISH;
-                    starveNext[i][(k + LIMIT - 1) % LIMIT] = starve[i][k];
-                    breedNext[i][(k + LIMIT - 1) % LIMIT] = breed[i][k];
-                    // Clear the current position and associated breed & starve times
-                    oceanNext[i][k] = WATER;
-                    breedNext[i][k] = breedLife;
-                    starveNext[i][k] = starveLife;
+                    move(FISH, i, k, i, (k + LIMIT - 1) % LIMIT);
 
                 } else if (moveDirection == 2) { // South: Increase Y
 
-                    oceanNext[i][(k + 1) % LIMIT] = FISH;
-                    starveNext[i][(k + 1) % LIMIT] = starve[i][k];
-                    breedNext[i][(k + 1) % LIMIT] = breed[i][k];
-                    // Clear the current position and associated breed & starve times
-                    oceanNext[i][k] = WATER;
-                    breedNext[i][k] = breedLife;
-                    starveNext[i][k] = starveLife;
+                    move(FISH, i, k, i, (k + 1) % LIMIT);
 
                 } else if (moveDirection == 3) { // East: Increase X
 
-                    oceanNext[(i + 1) % LIMIT][k] = FISH;
-                    starveNext[(k + 1) % LIMIT][k] = starve[i][k];
-                    breedNext[(k + 1) % LIMIT][k] = breed[i][k];
-                    // Clear the current position and associated breed & starve times
-                    oceanNext[i][k] = WATER;
-                    breedNext[i][k] = breedLife;
-                    starveNext[i][k] = starveLife;
+                    move(FISH, i, k, (i + 1) % LIMIT, k);
 
                 } else if (moveDirection == 4) { // West: Decrease X
 
-                    oceanNext[(i + LIMIT - 1) % LIMIT][k] = FISH;
-                    starveNext[(i + LIMIT - 1) % LIMIT][k] = starve[i][k];
-                    breedNext[(i + LIMIT - 1) % LIMIT][k] = breed[i][k];
-                    // Clear the current position and associated breed & starve times
-                    oceanNext[i][k] = WATER;
-                    breedNext[i][k] = breedLife;
-                    starveNext[i][k] = starveLife;
+                    move(FISH, i, k, (i + LIMIT - 1) % LIMIT, k);
                 }
                 if (canBreed) { breedFish(i,k); }
             }
@@ -345,8 +331,8 @@ void simulate() {
 
                 if (starve[i][k] == 0) {
                     killShark(i, k);
-                }
-                if (moveDirection == 1) { // North: decrease Y
+
+                } else if (moveDirection == 1) { // North: decrease Y
 
                     oceanNext[i][(k + LIMIT - 1) % LIMIT] = SHARK;
                     starveNext[i][(k + LIMIT - 1) % LIMIT] = starve[i][k];
@@ -388,9 +374,6 @@ void simulate() {
                 }
 
             }
-            ocean[i][k] = WATER;
-            breed[i][k] = breedLife;
-            starve[i][k] = starveLife;
         }
     }
     updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
@@ -427,7 +410,7 @@ int main() {
     do {
         // Prints the ocean
         print();
-        std::cout << "---------------------" << std::endl;
+        std::cout << "--------------------------------------------------------------" << std::endl;
         // Timer
         usleep(microseconds);
         // Simulate

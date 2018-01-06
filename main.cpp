@@ -63,6 +63,7 @@ long int microseconds = 100000; // Timer variable
  * starve arrays with 0
  */
 void populateAllArrays() {
+    #pragma omp parallel for
     for (int i = 0; i < _X; ++i) {
         for (int k = 0; k < _Y; ++k) {
             ocean[i][k] = WATER;
@@ -80,6 +81,7 @@ void populateAllArrays() {
  * Sets corresponding breed/starve arrays
  */
 void populateWithFish() {
+    #pragma omp parallel for
     for (int i = 0; i < totalFish; ++i) {
         randomXPos = (int) random() % LIMIT;
         randomYPos = (int) random() % LIMIT;
@@ -94,6 +96,7 @@ void populateWithFish() {
  * Sets corresponding breed/starve arrays
  */
 void populateWithSharks() {
+    #pragma omp parallel for
     for (int i = 0; i < totalSharks; ++i) {
         randomXPos = (int) random() % LIMIT;
         randomYPos = (int) random() % LIMIT;
@@ -110,6 +113,7 @@ void updateOceanContents(
         char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
         int toBreed[LIMIT][LIMIT], int fromBreed[LIMIT][LIMIT],
         int toStarve[LIMIT][LIMIT], int fromStarve[LIMIT][LIMIT]) {
+    #pragma omp parallel for
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             toOcean[i][k] = fromOcean[i][k];
@@ -136,6 +140,7 @@ void create() {
 void updateTotals() {
     allSharks = 0;
     allFish = 0;
+    #pragma omp parallel for
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             if (ocean[i][k] == FISH) {

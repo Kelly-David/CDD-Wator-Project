@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/Users/david/CLionProjects/WatorSim/animal.cpp
-animal.h
-/Users/david/CLionProjects/WatorSim/animal.h
-
-/Users/david/CLionProjects/WatorSim/animal.h
-
 /Users/david/CLionProjects/WatorSim/main.cpp
 iostream
 -
@@ -26,5 +20,11 @@ vector
 stdlib.h
 -
 time.h
+-
+cstdio
+-
+ctime
+-
+fstream
 -
 

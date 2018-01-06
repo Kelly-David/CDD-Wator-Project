@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/WatorSim.dir/main.cpp.o"
-  "CMakeFiles/WatorSim.dir/animal.cpp.o"
   "WatorSim.pdb"
   "WatorSim"
 )

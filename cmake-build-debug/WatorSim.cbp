@@ -80,12 +80,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/david/CLionProjects/WatorSim/animal.cpp">
-			<Option target="WatorSim"/>
-		</Unit>
-		<Unit filename="/Users/david/CLionProjects/WatorSim/animal.h">
-			<Option target="WatorSim"/>
-		</Unit>
 		<Unit filename="/Users/david/CLionProjects/WatorSim/main.cpp">
 			<Option target="WatorSim"/>
 		</Unit>

@@ -123,33 +123,6 @@ WatorSim/fast:
 	$(MAKE) -f CMakeFiles/WatorSim.dir/build.make CMakeFiles/WatorSim.dir/build
 .PHONY : WatorSim/fast
 
-animal.o: animal.cpp.o
-
-.PHONY : animal.o
-
-# target to build an object file
-animal.cpp.o:
-	$(MAKE) -f CMakeFiles/WatorSim.dir/build.make CMakeFiles/WatorSim.dir/animal.cpp.o
-.PHONY : animal.cpp.o
-
-animal.i: animal.cpp.i
-
-.PHONY : animal.i
-
-# target to preprocess a source file
-animal.cpp.i:
-	$(MAKE) -f CMakeFiles/WatorSim.dir/build.make CMakeFiles/WatorSim.dir/animal.cpp.i
-.PHONY : animal.cpp.i
-
-animal.s: animal.cpp.s
-
-.PHONY : animal.s
-
-# target to generate assembly for a file
-animal.cpp.s:
-	$(MAKE) -f CMakeFiles/WatorSim.dir/build.make CMakeFiles/WatorSim.dir/animal.cpp.s
-.PHONY : animal.cpp.s
-
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -186,9 +159,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... WatorSim"
-	@echo "... animal.o"
-	@echo "... animal.i"
-	@echo "... animal.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

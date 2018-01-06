@@ -4,7 +4,6 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/david/CLionProjects/WatorSim/animal.cpp" "/Users/david/CLionProjects/WatorSim/cmake-build-debug/CMakeFiles/WatorSim.dir/animal.cpp.o"
   "/Users/david/CLionProjects/WatorSim/main.cpp" "/Users/david/CLionProjects/WatorSim/cmake-build-debug/CMakeFiles/WatorSim.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")

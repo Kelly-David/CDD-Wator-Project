@@ -22,6 +22,9 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <cstdio>
+#include <ctime>
+#include <fstream>
 
 int const _X = 30;      // Ocean width
 int const _Y= 30;       // Ocean height
@@ -404,28 +407,53 @@ void print() {
  */
 int main() {
 
-    //Initialize random seed for random number generator
-    srand (time(NULL));
+    // Set the number of threads OMP will use
+    omp_set_num_threads(8);
 
-    std::cout << "Wator World Simulation" << std::endl;
+    std::ofstream output;
+    output.open ("4threads.csv");
 
-    // Create the Wator world
-    create();
+    // Testing loop
+    for (int i = 0; i < 3; ++i ){
 
-    // Start main loop
-    do {
-        // Prints the ocean
-        print();
-        std::cout << "--------------------------------------------------------------" << std::endl;
-        // Timer
-        usleep(microseconds);
-        // Simulate
-        simulate();
-        // Update the arrays
-        updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
-        // Update Shark and Fish totals
-        updateTotals();
-    } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
+
+        // Start timer:
+        std::clock_t start;
+        double duration;
+
+        start = std::clock();
+
+        //Initialize random seed for random number generator
+        srand (time(NULL));
+
+        std::cout << "Wator World Simulation" << std::endl;
+
+        // Create the Wator world
+        create();
+
+        // Start main loop
+        do {
+            // Prints the ocean
+            print();
+            std::cout << "--------------------------------------------------------------" << std::endl;
+            // Timer
+            usleep(microseconds);
+            // Simulate
+            simulate();
+            // Update the arrays
+            updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
+            // Update Shark and Fish totals
+            updateTotals();
+        } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
+
+        // Get time difference
+        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+        // Write to file
+        output << duration << ",\n";
+    }
+
+    output.close();
 
     return 0;
 }

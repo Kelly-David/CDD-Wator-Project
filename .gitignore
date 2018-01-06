@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Added by David on Jan 6th 2018
+animal.h
+animal.cpp

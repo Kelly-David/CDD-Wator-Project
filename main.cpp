@@ -18,6 +18,7 @@
 #include <iostream>
 #include <random>
 #include <unistd.h>
+#include <omp.h>
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
@@ -89,7 +90,7 @@ void populateWithFish() {
 }
 
 /**
- * \brief void populateWithSharkss() :: Randomly places Sharks in the ocean array
+ * \brief void populateWithSharks() :: Randomly places Sharks in the ocean array
  * Sets corresponding breed/starve arrays
  */
 void populateWithSharks() {

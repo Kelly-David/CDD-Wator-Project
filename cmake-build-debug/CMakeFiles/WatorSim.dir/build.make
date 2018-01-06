@@ -60,15 +60,15 @@ include CMakeFiles/WatorSim.dir/flags.make
 CMakeFiles/WatorSim.dir/main.cpp.o: CMakeFiles/WatorSim.dir/flags.make
 CMakeFiles/WatorSim.dir/main.cpp.o: ../main.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/david/CLionProjects/WatorSim/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/WatorSim.dir/main.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WatorSim.dir/main.cpp.o -c /Users/david/CLionProjects/WatorSim/main.cpp
+	/usr/local/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WatorSim.dir/main.cpp.o -c /Users/david/CLionProjects/WatorSim/main.cpp
 
 CMakeFiles/WatorSim.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WatorSim.dir/main.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/david/CLionProjects/WatorSim/main.cpp > CMakeFiles/WatorSim.dir/main.cpp.i
+	/usr/local/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/david/CLionProjects/WatorSim/main.cpp > CMakeFiles/WatorSim.dir/main.cpp.i
 
 CMakeFiles/WatorSim.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WatorSim.dir/main.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/david/CLionProjects/WatorSim/main.cpp -o CMakeFiles/WatorSim.dir/main.cpp.s
+	/usr/local/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/david/CLionProjects/WatorSim/main.cpp -o CMakeFiles/WatorSim.dir/main.cpp.s
 
 CMakeFiles/WatorSim.dir/main.cpp.o.requires:
 
@@ -84,15 +84,15 @@ CMakeFiles/WatorSim.dir/main.cpp.o.provides.build: CMakeFiles/WatorSim.dir/main.
 CMakeFiles/WatorSim.dir/animal.cpp.o: CMakeFiles/WatorSim.dir/flags.make
 CMakeFiles/WatorSim.dir/animal.cpp.o: ../animal.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/david/CLionProjects/WatorSim/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/WatorSim.dir/animal.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WatorSim.dir/animal.cpp.o -c /Users/david/CLionProjects/WatorSim/animal.cpp
+	/usr/local/bin/g++-7  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/WatorSim.dir/animal.cpp.o -c /Users/david/CLionProjects/WatorSim/animal.cpp
 
 CMakeFiles/WatorSim.dir/animal.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/WatorSim.dir/animal.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/david/CLionProjects/WatorSim/animal.cpp > CMakeFiles/WatorSim.dir/animal.cpp.i
+	/usr/local/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/david/CLionProjects/WatorSim/animal.cpp > CMakeFiles/WatorSim.dir/animal.cpp.i
 
 CMakeFiles/WatorSim.dir/animal.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/WatorSim.dir/animal.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/david/CLionProjects/WatorSim/animal.cpp -o CMakeFiles/WatorSim.dir/animal.cpp.s
+	/usr/local/bin/g++-7 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/david/CLionProjects/WatorSim/animal.cpp -o CMakeFiles/WatorSim.dir/animal.cpp.s
 
 CMakeFiles/WatorSim.dir/animal.cpp.o.requires:
 

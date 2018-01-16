@@ -1,7 +1,7 @@
 # @author: David Kelly
 # @date:   09/11/2017
 
-Exe = buff
+Exe = watorsime
 Cc = g++
 Flags = -std=c++11 -pthread
 Cfiles = main.cpp

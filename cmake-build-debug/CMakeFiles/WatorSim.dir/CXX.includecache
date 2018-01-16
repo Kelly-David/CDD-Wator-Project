@@ -13,8 +13,6 @@ random
 -
 unistd.h
 -
-omp.h
--
 vector
 -
 stdlib.h

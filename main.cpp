@@ -415,20 +415,6 @@ void print() {
  */
 int main() {
 
-    // Testing: File output
-    std::ofstream output;
-    output.open("serial.csv");
-
-    // Testing: Loop
-    for (int i = 0; i < 20; ++i ) {
-
-
-        // Start timer:
-        std::clock_t start;
-        double duration;
-
-        start = std::clock();
-
         //Initialize random seed for random number generator
         srand(time(NULL));
 
@@ -452,15 +438,6 @@ int main() {
             updateTotals();
         } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
 
-        // Testing: Get time difference
-        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-        // Testing: Write to file
-        output << duration << ",\n";
-    }
-
-    // Testing: Close the file
-    output.close();
 
     return 0;
 }

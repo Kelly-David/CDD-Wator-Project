@@ -18,3 +18,31 @@ Project implemented using C++ on Linux using g++ compiler.
 Documentation using Doxygen.
 
 Makefile: Debug and release, performs clean up and generates documentation.
+
+### Run
+
+To run:
+
+        cd lab[number]
+
+        make
+
+	./ [executable]
+
+Generate docs:
+
+	cd lab[number]
+
+	doxygen
+
+
+### Branch History
+
+# Master
+Serial Implementation
+
+# Parallel
+Using OpenMP
+
+# Testing
+Using OpenMp. Outputs run time to file.

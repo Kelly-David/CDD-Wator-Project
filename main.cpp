@@ -408,20 +408,16 @@ void print() {
 int main() {
 
     // Set the number of threads OMP will use
-    omp_set_num_threads(8);
+    omp_set_num_threads(1);
 
     std::ofstream output;
-    output.open ("4threads.csv");
+    output.open ("1threads.csv");
 
     // Testing loop
-    for (int i = 0; i < 3; ++i ){
+    for (int i = 0; i < 10; ++i ){
 
 
-        // Start timer:
-        std::clock_t start;
-        double duration;
 
-        start = std::clock();
 
         //Initialize random seed for random number generator
         srand (time(NULL));
@@ -433,6 +429,12 @@ int main() {
 
         // Start main loop
         do {
+            // Start timer:
+            std::clock_t start;
+            double duration;
+
+            start = std::clock();
+
             // Prints the ocean
             print();
             std::cout << "--------------------------------------------------------------" << std::endl;
@@ -444,13 +446,15 @@ int main() {
             updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
             // Update Shark and Fish totals
             updateTotals();
+
+
+            // Get time difference
+            duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+            // Write to file
+            output << duration << ",\n";
+
         } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
 
-        // Get time difference
-        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-        // Write to file
-        output << duration << ",\n";
     }
 
     output.close();

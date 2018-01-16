@@ -37,17 +37,7 @@ Generate docs:
 
 ### Benchmarking
 
-Grid Size
-* 30 x 30
-* 60 x 60
-* 120 x 120
-* 150 x 150
-
-Hardware Info
-* MacBook Pro 2017 - macOS High Sierra
-* Processor 3.1 GHz Intel Core i5
-* Memory 16 GB 2133 MHz LPDDR3
-
+_Test_
 Grid Size     | 30 x 30       | 60 x 60       | 120 x 120     | 150 x 150
 ------------- | ------------- | ------------- | ------------- | -------------
 Average(ms)   | 0.003939963   | 0.012211743   | 0.035332249   | 0.057491424
@@ -55,6 +45,10 @@ Min(ms)       | 0.000639      | 0.000997      | 0.002384      | 0.003092
 Max(ms)       | 0.027821      | 0.059312      | 0.209131      | 0.30537
 Stdev         | 0.003633349   | 0.011383074   | 0.036173861   | 0.030868732
 
+_Hardware Info_
+* MacBook Pro 2017 - macOS High Sierra
+* Processor 3.1 GHz Intel Core i5
+* Memory 16 GB 2133 MHz LPDDR3
 
 ![alt text](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/gridsize.png)
 

@@ -63,4 +63,5 @@ Serial Implementation
 Using OpenMP
 
 #### Testing
-Using OpenMp. Outputs run time to file.
+* Using OpenMp.
+* Outputs run time(ms) to file.

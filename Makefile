@@ -1,7 +1,7 @@
 # @author: David Kelly
-# @date:   09/11/2017
+# @date:   29/11/2017
 
-Exe = watorsim
+Exe = wator
 Cc = g++
 Flags = -std=c++11 -pthread
 Cfiles = main.cpp

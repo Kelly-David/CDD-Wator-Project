@@ -1,24 +1,27 @@
-/*
-    Wator Simulation : Sharks and Fish
-    Created by: David Kelly, Vaidas Suipienus
-    Date: 29/11/2017
-
-
-    Description:
-    Fish:   move to a non-occupied index.
-            breed when breedLife == 0 (spawn a new fish in their place)
-    Shark:  move to nearby index occupied by a fish
-            if no fish are nearby :
-                move to a non-occupied index
-                decrement starveLife
-            die when starveLife == 0
+/**
+ * \file main.cpp
+ * \name Wator Simulation : Sharks and Fish
+ * \author Created by: David Kelly, Vaidas Suipienus
+ * \date Date: 29/11/2017
+ *
+ * \description Wator World Simulation
+ *
+ * Fish:
+ *      move to a non-occupied index.
+ *      breed when breedLife == 0 (spawn a new fish in their place)
+ * Shark:
+ *      move to nearby index occupied by a fish
+ *      if no fish are nearby :
+ *          move to a non-occupied index
+ *          decrement starveLife
+ *      die when starveLife == 0
 */
 
-/* Includes */
+/** Includes */
 #include <iostream>
 #include <random>
 #include <unistd.h>
-#include <omp.h>
+// #include <omp.h>
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
@@ -60,10 +63,8 @@ int randomXPos, randomYPos = 0;
 long int microseconds = 100000; // Timer variable
 
 /**
- * \brief void populateAllArrays()() :: Initialises 6 arrays:
- * ocean arrays with WATER character
- * breed arrays with 0
- * starve arrays with 0
+ * \def void populateAllArrays()
+ * \brief Initialises 6 arrays: ocean arrays with WATER character; breed arrays with 0; starve arrays with 0
  */
 void populateAllArrays() {
     for (int i = 0; i < _X; ++i) {
@@ -79,8 +80,8 @@ void populateAllArrays() {
 }
 
 /**
- * \brief void populateWithFish() :: Randomly places Fish in the ocean array
- * Sets corresponding breed/starve arrays
+ * \def void populateWithFish()
+ * \brief Randomly places Fish in the ocean array. Sets corresponding breed/starve arrays
  */
 void populateWithFish() {
     for (int i = 0; i < totalFish; ++i) {
@@ -93,8 +94,8 @@ void populateWithFish() {
 }
 
 /**
- * \brief void populateWithSharks() :: Randomly places Sharks in the ocean array
- * Sets corresponding breed/starve arrays
+ * \def void populateWithSharks()
+ * \brief Randomly places Sharks in the ocean array. Sets corresponding breed/starve arrays
  */
 void populateWithSharks() {
     for (int i = 0; i < totalSharks; ++i) {
@@ -107,6 +108,10 @@ void populateWithSharks() {
 }
 
 /**
+ * \def void updateOceanContents(
+        char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
+        int toBreed[LIMIT][LIMIT], int fromBreed[LIMIT][LIMIT],
+        int toStarve[LIMIT][LIMIT], int fromStarve[LIMIT][LIMIT])
  * \brief Copies the contents of ...next arrays to display arrays
  */
 void updateOceanContents(
@@ -124,7 +129,8 @@ void updateOceanContents(
 }
 
 /**
- * \brief void create() :: Populates the ocean array with respective characters
+ * \def void create()
+ * \brief Populates the ocean array with respective characters
  */
 void create() {
     populateAllArrays();
@@ -134,7 +140,8 @@ void create() {
 }
 
 /**
- * \brief Update totals for display
+ * \def void updateTotals()
+ * \brief Counts the total sharks and fish
  */
 void updateTotals() {
     allSharks = 0;
@@ -152,7 +159,8 @@ void updateTotals() {
 }
 
 /**
- * \brief Breed Fish
+ * \def void breedFish(int xpos, int ypos)
+ * \brief Spawns a new Fish in the index position corresponding to xpos and ypos
  */
 void breedFish(int xpos, int ypos) {
     // New fish are placed in the pre-move location of parent.
@@ -163,8 +171,8 @@ void breedFish(int xpos, int ypos) {
 }
 
 /**
- * \brief Eat Fish
- * Removes the Fish from the oceanNext array at the corresponding position
+ * \def void eatFish(int xpos, int ypos)
+ * \brief Removes the Fish from the oceanNext array at the corresponding position xpos and ypos. Resets starve time and breed time.
  */
 void eatFish(int xpos, int ypos) {
     oceanNext[xpos][ypos] = WATER;
@@ -177,7 +185,8 @@ void eatFish(int xpos, int ypos) {
 }
 
 /**
- * \brief Kill Shark
+ * \def void killShark( int xpos, int ypos)
+ * \brief Removes a shark at position xpos and ypos; replacing array index with Water character and resets starve time and breed time.
  */
 void killShark( int xpos, int ypos) {
     oceanNext[xpos][ypos] = WATER;
@@ -189,7 +198,8 @@ void killShark( int xpos, int ypos) {
 }
 
 /**
- * \brief int randomGen(long int limit)::returns a random integer between 1 and limit
+ * \def int randomGen(long int limit)
+ * \brief returns a random integer between 1 and the limit. Used to select the direction to which the shark/fish will be moved.
  */
 int randomGen(long int range) {
     std::random_device rd; // obtain a random number from hardware
@@ -200,7 +210,8 @@ int randomGen(long int range) {
 }
 
 /**
- * \brief int getMoveDirection(
+ * \def int getMoveDirection(char type, int xpos, int ypos)
+ * \brief Returns a direction to which the shark/fish will be moved. 1=North; 2=South; 3=East; 4=West.
  */
 int getMoveDirection(char type, int xpos, int ypos) {
 
@@ -268,8 +279,8 @@ int getMoveDirection(char type, int xpos, int ypos) {
 }
 
 /**
- * \brief Moves the Fish or Sharks to their new location
- * Moves the contents of array at xpos and ypos to the index of array ...next at xMove yMove
+ * \def void move(char animal, int xpos, int ypos, int xMove, int yMove)
+ * \brief Moves the Fish or Sharks to their new location. Moves the contents of array at xpos and ypos to the index of array ...next at xMove yMove
  */
 void move(char animal, int xpos, int ypos, int xMove, int yMove) {
 
@@ -282,7 +293,8 @@ void move(char animal, int xpos, int ypos, int xMove, int yMove) {
 }
 
 /**
- * \brief Prints the ocean array to screen
+ * \def void simulate()
+ * \brief Main simulation function. Iterates through each element in the ocean array. Moves fish/shark, breed time and starve time in a determined direction to the ...next arrays
  */
 void simulate() {
     int moveDirection = 0;
@@ -383,7 +395,7 @@ void simulate() {
     updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
 }
 
-/**
+/**\def void print()
  * \brief Prints the ocean array to screen
  */
 void print() {
@@ -398,15 +410,16 @@ void print() {
 }
 
 /**
- * \brief Main
+ * \def Main
+ * \brief The main function
  */
 int main() {
 
-    // File output
+    // Testing: File output
     std::ofstream output;
     output.open("serial.csv");
 
-    // Testing loop
+    // Testing: Loop
     for (int i = 0; i < 20; ++i ) {
 
 
@@ -439,14 +452,14 @@ int main() {
             updateTotals();
         } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
 
-        // Get time difference
+        // Testing: Get time difference
         duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
-        // Write to file
+        // Testing: Write to file
         output << duration << ",\n";
     }
 
-    // Close the file
+    // Testing: Close the file
     output.close();
 
     return 0;

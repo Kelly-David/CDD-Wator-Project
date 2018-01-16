@@ -29,9 +29,9 @@
 #include <ctime>
 #include <fstream>
 
-int const _X = 30;      // Ocean width
-int const _Y= 30;       // Ocean height
-int const LIMIT = 30;   // Must match array bounds, expects ocean to be square
+int const _X = 150;      // Ocean width
+int const _Y= 150;       // Ocean height
+int const LIMIT = 150;   // Must match array bounds, expects ocean to be square
 char const WATER = ' '; // Water is blank space
 char const FISH = '.';  // Fish are o
 char const SHARK = '$'; // Sharks are $
@@ -427,8 +427,6 @@ int main() {
         std::clock_t start;
         double duration;
 
-        start = std::clock();
-
         //Initialize random seed for random number generator
         srand(time(NULL));
 
@@ -439,6 +437,7 @@ int main() {
 
         // Start main loop
         do {
+            start = std::clock();
             // Prints the ocean
             print();
             std::cout << "--------------------------------------------------------------" << std::endl;
@@ -450,13 +449,14 @@ int main() {
             updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
             // Update Shark and Fish totals
             updateTotals();
+
+            // Testing: Get time difference
+            duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+
+            // Testing: Write to file
+            output << duration << ",\n";
+
         } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
-
-        // Testing: Get time difference
-        duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-
-        // Testing: Write to file
-        output << duration << ",\n";
     }
 
     // Testing: Close the file

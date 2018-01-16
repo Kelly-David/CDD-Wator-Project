@@ -302,7 +302,7 @@ void simulate() {
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             // If it's a FISH...
-            if ((ocean[i][k] == FISH)) {
+            if (ocean[i][k] == FISH) {
                 // Find the move direction. Will be 0-4
                 moveDirection = getMoveDirection(FISH, i, k);
 
@@ -334,7 +334,7 @@ void simulate() {
                 if (canBreed) { breedFish(i,k); }
             }
             // If its a SHARK...
-            else if ((ocean[i][k] == SHARK)) {
+            else if (ocean[i][k] == SHARK) {
                 moveDirection = getMoveDirection(SHARK, i, k);
 
                 if (moveDirection != 0) {

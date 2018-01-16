@@ -38,11 +38,11 @@ Generate docs:
 
 ### Branch History
 
-# Master
+#### Master
 Serial Implementation
 
-# Parallel
+#### Parallel
 Using OpenMP
 
-# Testing
+#### Testing
 Using OpenMp. Outputs run time to file.

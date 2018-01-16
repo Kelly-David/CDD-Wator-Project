@@ -35,6 +35,20 @@ Generate docs:
 
 	doxygen
 
+### Benchmarking
+
+Grid Size
+    30 x 30
+    60 x 60
+    120 x 120
+    150 x 150
+
+MacBook Pro 2017 - macOS High Sierra
+Processor 3.1 GHz Intel Core i5
+Memory 16 GB 2133 MHz LPDDR3
+
+![alt text](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/gridsize.png)
+
 
 ### Branch History
 

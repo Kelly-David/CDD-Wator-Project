@@ -53,15 +53,20 @@ Stdev         | 0.003633349   | 0.011383074   | 0.036173861   | 0.030868732
 #### Result
 ![alt text](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/gridsize.png)
 
+### Release
+[1.0]()
 
 ### Branch History
 
-#### Master
+#### [Master](https://github.com/Kelly-David/CDD-Wator-Project/tree/master)
+Working...
+
+#### [Serial](https://github.com/Kelly-David/CDD-Wator-Project/tree/serial)
 Serial Implementation
 
-#### Parallel
+#### [Parallel](https://github.com/Kelly-David/CDD-Wator-Project/tree/parallel)
 Using OpenMP
 
-#### Testing
+#### [Testing](https://github.com/Kelly-David/CDD-Wator-Project/tree/testing)
 * Using OpenMp.
 * Outputs run time(ms) to file.

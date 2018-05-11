@@ -29,9 +29,9 @@
 #include <ctime>
 #include <fstream>
 
-int const _X = 150;      // Ocean width
-int const _Y= 150;       // Ocean height
-int const LIMIT = 150;   // Must match array bounds, expects ocean to be square
+int const _X = 30;      // Ocean width
+int const _Y= 30;       // Ocean height
+int const LIMIT = 30;   // Must match array bounds, expects ocean to be square
 char const WATER = ' '; // Water is blank space
 char const FISH = '.';  // Fish are o
 char const SHARK = '$'; // Sharks are $
@@ -420,7 +420,7 @@ int main() {
     output.open("serial.csv");
 
     // Testing: Loop
-    for (int i = 0; i < 20; ++i ) {
+    for (int i = 0; i < 1; ++i ) {
 
 
         // Start timer:

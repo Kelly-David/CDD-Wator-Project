@@ -3,7 +3,7 @@
 
 Exe = wator
 Cc = g++
-Flags = -std=c++11 -pthread
+Flags = -std=c++11 -pthread -pg
 Cfiles = main.cpp
 Hfiles =
 RM = rm

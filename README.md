@@ -23,17 +23,13 @@ Makefile: Debug and release, performs clean up and generates documentation.
 
 To run:
 
-        cd lab[number]
-
         make
 
 	./ [executable]
 
 Generate docs:
 
-	cd lab[number]
-
-	doxygen
+	make docs
 
 ### Benchmarking
 

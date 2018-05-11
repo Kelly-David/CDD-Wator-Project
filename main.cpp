@@ -22,10 +22,13 @@
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
+#include <cstdio>
+#include <ctime>
+#include <fstream>
 
-int const _X = 30;      // Ocean width
-int const _Y= 30;       // Ocean height
-int const LIMIT = 30;   // Must match array bounds, expects ocean to be square
+int const _X = 100;      // Ocean width
+int const _Y= 100;       // Ocean height
+int const LIMIT = 100;   // Must match array bounds, expects ocean to be square
 char const WATER = ' '; // Water is blank space
 char const FISH = '.';  // Fish are o
 char const SHARK = '$'; // Sharks are $
@@ -63,7 +66,7 @@ long int microseconds = 100000; // Timer variable
  * starve arrays with 0
  */
 void populateAllArrays() {
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4)
     for (int i = 0; i < _X; ++i) {
         for (int k = 0; k < _Y; ++k) {
             ocean[i][k] = WATER;
@@ -81,7 +84,7 @@ void populateAllArrays() {
  * Sets corresponding breed/starve arrays
  */
 void populateWithFish() {
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4)
     for (int i = 0; i < totalFish; ++i) {
         randomXPos = (int) random() % LIMIT;
         randomYPos = (int) random() % LIMIT;
@@ -96,7 +99,7 @@ void populateWithFish() {
  * Sets corresponding breed/starve arrays
  */
 void populateWithSharks() {
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4)
     for (int i = 0; i < totalSharks; ++i) {
         randomXPos = (int) random() % LIMIT;
         randomYPos = (int) random() % LIMIT;
@@ -113,7 +116,7 @@ void updateOceanContents(
         char toOcean[LIMIT][LIMIT], char fromOcean[LIMIT][LIMIT],
         int toBreed[LIMIT][LIMIT], int fromBreed[LIMIT][LIMIT],
         int toStarve[LIMIT][LIMIT], int fromStarve[LIMIT][LIMIT]) {
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4)
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             toOcean[i][k] = fromOcean[i][k];
@@ -140,7 +143,7 @@ void create() {
 void updateTotals() {
     allSharks = 0;
     allFish = 0;
-    #pragma omp parallel for
+    #pragma omp parallel for num_threads(4)
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             if (ocean[i][k] == FISH) {
@@ -389,6 +392,7 @@ void simulate() {
  * \brief Prints the ocean array to screen
  */
 void print() {
+    #pragma omp parallel for num_threads(4)
     for (int i = 0; i < LIMIT; ++i) {
         for (int k = 0; k < LIMIT; ++k) {
             std::cout << ocean[i][k];
@@ -404,9 +408,11 @@ void print() {
  */
 int main() {
 
+    /** 
+     * Threads Setup
+    */
     omp_set_dynamic(0);     // Explicitly disable dynamic teams
     omp_set_num_threads(4); // Use 4 threads for all consecutive parallel regions
-
     /** 
      * Testing only
      * ...since omp_get_num_threads() defaults to one in serial code.
@@ -416,28 +422,54 @@ int main() {
         std::cout << "Threads= " << omp_get_num_threads() << std::endl;
     }
 
-    //Initialize random seed for random number generator
-    srand (time(NULL));
+    // File system
+    std::ofstream output;
+    output.open ("4threads.csv");
 
-    std::cout << "Wator World Simulation" << std::endl;
+    // Benchmarking Loop
+    for (int i = 0; i < 10; ++i) {
 
-    // Create the Wator world
-    create();
+        //Initialize random seed for random number generator
+        srand (time(NULL));
 
-    // Start main loop
-    do {
-        // Prints the ocean
-        print();
-        std::cout << "--------------------------------------------------------------" << std::endl;
-        // Timer
-        usleep(microseconds);
-        // Simulate
-        simulate();
-        // Update the arrays
-        updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
-        // Update Shark and Fish totals
-        updateTotals();
-    } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
+        std::cout << "Wator World Simulation" << std::endl;
+
+        // Create the Wator world
+        create();
+
+        // Start main loop
+        do {
+            /** 
+             * Benchmarking Timer 
+            */
+            std::clock_t start;
+            double duration;
+            start = std::clock();
+
+            // Prints the ocean
+            print();
+            std::cout << "--------------------------------------------------------------" << std::endl;
+            // Timer
+            usleep(microseconds);
+            // Simulate
+            simulate();
+            // Update the arrays
+            updateOceanContents(ocean, oceanNext, breed, breedNext, starve, starveNext);
+            // Update Shark and Fish totals
+            updateTotals();
+
+
+            // Get time difference
+            duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
+            // Write to file
+            output << duration << ",\n";
+
+
+        } while ((allSharks > 0) && (allFish > 0)); // Run until all animals are gone
+
+    } //loop end.
+
+    output.close();
 
     return 0;
 }

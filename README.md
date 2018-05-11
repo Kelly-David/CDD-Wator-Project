@@ -49,6 +49,12 @@ Stdev         | 0.003633349   | 0.011383074   | 0.036173861   | 0.030868732
 #### Result
 ![alt text](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/gridsize.png)
 
+### Profiler
+
+GProf
+
+[Analysis](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/analysis.txt)
+
 ### Release
 [1.0]()
 

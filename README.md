@@ -42,33 +42,35 @@ Max(ms)       | 0.027821      | 0.059312      | 0.209131      | 0.30537
 Stdev         | 0.003633349   | 0.011383074   | 0.036173861   | 0.030868732
 
 #### Hardware Info
-* MacBook Pro 2017 - macOS High Sierra
+* MacBook Pro 2017 - macOS High Sierra (Ubuntu 16.04 Parallels Desktop)
 * Processor 3.1 GHz Intel Core i5
 * Memory 16 GB 2133 MHz LPDDR3
+* Dual Core
 
 #### Result
 ![alt text](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/gridsize.png)
 
 ### Profiler
 
-GProf
+Using: GProf
 
-[Analysis](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/analysis.txt)
+Output: [Analysis](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Project/master/analysis.txt)
 
 ### Release
-[1.0]()
+Serial Implementation [1.0](https://github.com/Kelly-David/CDD-Wator-Project/releases/tag/1.0)
+Parallel Implementation [1.0](https://github.com/Kelly-David/CDD-Wator-Project/releases/tag/1.0)
 
-### Branch History
+## Branch History
 
-#### [Master](https://github.com/Kelly-David/CDD-Wator-Project/tree/master)
+### [Master](https://github.com/Kelly-David/CDD-Wator-Project/tree/master)
 Working...
 
-#### [Serial](https://github.com/Kelly-David/CDD-Wator-Project/tree/serial)
+### [Serial](https://github.com/Kelly-David/CDD-Wator-Project/tree/serial)
 Serial Implementation
 
-#### [Parallel](https://github.com/Kelly-David/CDD-Wator-Project/tree/parallel)
+### [Parallel](https://github.com/Kelly-David/CDD-Wator-Project/tree/parallel)
 Using OpenMP
 
-#### [Testing](https://github.com/Kelly-David/CDD-Wator-Project/tree/testing)
+### [Testing](https://github.com/Kelly-David/CDD-Wator-Project/tree/testing)
 * Using OpenMp.
 * Outputs run time(ms) to file.

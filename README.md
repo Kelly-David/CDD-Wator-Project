@@ -76,7 +76,7 @@ Output: [Analysis](https://raw.githubusercontent.com/Kelly-David/CDD-Wator-Proje
 ## Release
 Serial Implementation [1.0](https://github.com/Kelly-David/CDD-Wator-Project/releases/tag/1.0)
 
-Concurrent Implementation [1.0](https://github.com/Kelly-David/CDD-Wator-Project/releases/tag/1.0)
+Concurrent Implementation [1.1](https://github.com/Kelly-David/CDD-Wator-Project/releases/tag/1.1)
 
 ## Branch History
 

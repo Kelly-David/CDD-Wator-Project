@@ -404,6 +404,18 @@ void print() {
  */
 int main() {
 
+    omp_set_dynamic(0);     // Explicitly disable dynamic teams
+    omp_set_num_threads(4); // Use 4 threads for all consecutive parallel regions
+
+    /** 
+     * Testing only
+     * ...since omp_get_num_threads() defaults to one in serial code.
+    */
+    #pragma omp parallel 
+    {
+        std::cout << "Threads= " << omp_get_num_threads() << std::endl;
+    }
+
     //Initialize random seed for random number generator
     srand (time(NULL));
 

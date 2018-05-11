@@ -1,18 +1,29 @@
-# @author: David Kelly
-# @date:   29/11/2017
+# David Kelly 
+# 29/11/2017
+# Wator Makefile
+# Commands to  compile source code. 
+# Usage: Type 'make' in project directory
 
-Exe = wator
-Cc = g++
-Flags = -std=c++11 -pthread -pg
-Cfiles = main.cpp
-Hfiles =
-RM = rm
+EXE = wator
+CC=g++
+CFLAGS= -std=c++11 -pthread
+HFILES=
+CPPFILES=main.cpp
 
-all: $(Cfiles) $(Hfiles)
-	$(Cc) $(Flags) *.cpp -o $(Exe) $(DEBUGFLAGS)
+# All .o files depend on .cpp file with same name
+%.o: %.cpp
+	$(CC) -c -o $@ $< $(CFLAGS) $(DEBUGFLAGS)
 
-DEBUG: DEBUGFLAGS = -g -O0
+ALL: $(HFILES) $(CFILES)
+	$(CC) -o $(EXE) $(CFLAGS) $(CPPFILES) $(DEBUGFLAGS) 
+
+DEBUG: DEBUGFLAGS = -g -O0 -Wall
 DEBUG: ALL
 
-clean:
-	$(RM) *.o *~
+# Generate documentation
+docs: 
+	doxygen doxyfile
+
+# Remove the object files
+CLEAN:
+	rm *.o
